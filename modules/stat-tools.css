@@ -1,0 +1,42 @@
+@media all and (max-width: 40em) {
+    .grid-table-bp1 .ui-block-a,
+    .grid-table-bp1 .ui-block-b,
+    .grid-table-bp1 .ui-block-c,
+    .grid-table-bp1 .ui-block-d,
+    .grid-table-bp1 .ui-block-e {
+        width: 100%;
+        float: none;
+    }
+}
+
+@media all and (max-width: 60em) {
+    .grid-table-twoplots .ui-block-a,
+    .grid-table-twoplots .ui-block-b,
+    .grid-table-twoplots .ui-block-c,
+    .grid-table-twoplots .ui-block-d,
+    .grid-table-twoplots .ui-block-e {
+        width: 100%;
+        float: none;
+    }
+}
+
+.ui-block-a,
+.ui-block-b,
+.ui-block-c {
+    border: 1px solid grey;
+}
+
+.table-type1 {
+    border-spacing: 4px;
+    border-collapse: collapse;
+    padding: 5px;
+    margin-left: 15px;
+    /*border: 1px solid grey;*/
+}
+
+.table-type1 th,
+.table-type1 td {
+    border: 1px solid #222;
+    padding: 5px;
+    width: 3em;
+}

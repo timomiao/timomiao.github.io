@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NodeJS Test</title>
+    <script type="text/javascript" src="jQuery/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="jQuery/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="flot/jquery.flot.js"></script>
+    <script type="text/javascript" src="modules/logger.js"></script>
+    <script type="text/javascript" src="modules/jstat.min.js"></script>
+    <script type="text/javascript" src="modules/stats.js"></script>
+    <script type="text/javascript" src="modules/stat-tools.js"></script>
+    <script type="text/javascript" src="modules/table.js"></script>
+    <script type="text/javascript" src="modules/plot.js"></script>
+    <script type="text/javascript" src="modules/createFreqMatrix.js"></script>
+    <link rel="stylesheet" href="jQuery/jquery.mobile-1.4.5.css">
+    <link rel="stylesheet" href="modules/stat-tools.css">
+</head>
+
+<body>
+
+    <div data-role="page" id="startpage">
+        <div data-role="header">
+            <h1> Stat-Tool </h1>
+        </div>
+        <!-- /header -->
+
+        <div role="main" class="ui-content">
+
+
+            <label for="data">
+                <span class="labels">Daten:</span>
+            </label>
+            <textarea name="data" id="data">0,0,1,3,4,1,2,2,1,1,1,2,3,0,2,0,1,3,1,2,2,0,1,1,6,1,0,2,3,1,1,4,2,3,2,0,3,0,1,2</textarea>
+
+
+            Sortiert:
+            <div id="sorteddata"></div>
+
+            <div class="ui-grid-a grid-table-twoplots">
+                <div class="ui-block-a">
+                    <h4 style="text-align:center">Häufigkeitsverteilung</h4>
+                    <div id="plot1" style="width:auto;height:400px">
+                    </div>
+                    <div id="plotboxwhisker1" style="width:auto;height:50px;margin-left:2em;margin-right:0.5em"></div>
+                </div>
+                <div class="ui-block-b">
+                    <h4 style="text-align:center">Summenhäufigkeitsfunktion</h4>
+                    <div id="plot2" style="width:auto;height:400px">
+                    </div>
+                    <div id="plotboxwhisker2" style="width:auto;height:50px;margin-left:1.5em;margin-right:2em"></div>
+                </div>
+            </div>
+
+            <div class="ui-grid-b grid-table-bp1">
+                <div class="ui-block-a">
+                    <h4 style="text-align: center">Mittelwerte</h4>
+                    <table data-role="table" id="data-para-table-1" data-mode="reflow" class="table-stripe">
+                        <thead>
+                            <tr>
+                                <th>µ</th>
+                                <th>Median</th>
+                                <th>Modi</th>
+                                <th>geom.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span id="mu" style="color:green"></span></td>
+                                <td><span id="median" style="color:red"></span></td>
+                                <td><span id="modus"></span></td>
+                                <td><span id="geomm"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="ui-block-b">
+                    <h4 style="text-align: center">Streuungsmaße</h4>
+                    <table data-role="table" id="data-para-table-2" data-mode="reflow" class="table-stripes table-strokes">
+                        <thead>
+                            <tr>
+                                <th>σ²</th>
+                                <th>σ</th>
+                                <th>MAD</th>
+                                <th>Spannw.</th>
+                                <th>VC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span id="sigmasq"></span></td>
+                                <td><span id="sigma"></span></td>
+                                <td><span id="mad"></span></td>
+                                <td><span id="spann"></span></td>
+                                <td><span id="varcoeff"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="ui-block-c">
+                    <h4 style="text-align: center">sonstiges</h4>
+                    <table data-role="table" id="data-para-table-3" data-mode="reflow" class="table-stripe">
+                        <thead>
+                            <tr>
+                                <th>Anzahl</th>
+                                <th>Min</th>
+                                <th>Max</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span id="datasize"></span></td>
+                                <td><span id="min"></span></td>
+                                <td><span id="max"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="haeufigkeiten">
+        </div>
+        <!-- /content -->
+
+
+    </div>
+    <!-- /page -->
+
+</body>
+
+</html>
