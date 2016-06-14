@@ -17,6 +17,8 @@ function LTest(options) {
 	    alert('Local application but questions file is missing!');	
 	}
     }
+
+this.standalone = true;
     console.log('standalone: '+this.standalone);
 
     var settings= { lang:'en', debug:0}
