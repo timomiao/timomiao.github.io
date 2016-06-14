@@ -1,0 +1,34 @@
+Multiple choice test for chinese traffic license (english,chinese)
+
+Version 1.0
+2011/8/18
+
+Language: Javascript
+
+Standalone application for Browsers
+(Tested: Google Chrome 13.0.782.107)
+
+Features:
+- Multiple Choice Test for Chinese traffic license for categories Car (C1,C2,C3,C4), Bus (A1,A3,B1), Truck (A2,B2) and SPWM (self-propelled wheeled machinery, M) 
+
+- Offered languages: english, chinese (simplified)
+
+- 100 random questions in accordance with the ratios specified in the Regulations on Motorized Vehicle Driving Licenses (Traffic Control Bureau, Ministry of Public Security). The questions for regional regulations (5 questions) are substituted by general questions.
+
+- Full test over all 1500 questions (number varies accoding to license type)
+
+- After testing the wrong answers can be tested separately
+
+- Can be used by keyboard and/or mouse
+
+- Shortcuts: 
+    ESC	    -	Main menu
+    l	    -   Switch language (en<->cn) (Main menu)
+    Enter   -	Click highlighted button
+    Arrows  -	Move highlight
+    1,2,3,4 -	Highlight answer 1, 2, 3 or 4 (Multiple Choice)
+    a,b,c,d -	Highlight answer A, B, C or D (Multiple Choice)
+
+Known Bugs:
+- Various typos in question data (automatic conversion and parsing of word-document)
+

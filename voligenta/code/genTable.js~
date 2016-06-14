@@ -1,0 +1,151 @@
+/*
+	idxlist: 	array of indeces of wordarrays that should be added
+	collist:		array of selected columns indeces
+	postproc:   <null> or function to postprocess strings (substitute, remove,...)
+
+	otable:		table: [ ["a11","a12",.."a1m"], ["a21",...],..,["an1",..]]
+*/
+var genResultsTable = function (idxlist, wordarrays, collist, postproc) {
+	if(postproc != null) { console.log("postproc given!"); }
+	var dbg=false;
+	var otable = [];
+	var oline = [];	
+	var iline = [];
+	for (var i=0; i<idxlist.length; i++) {
+		if(dbg) console.log("selecting word["+idxlist[i]+"]");
+
+		for(var multDictEntries=0; multDictEntries < idxlist[i].length; multDictEntries++) {
+			iline = wordarrays[ idxlist[i][multDictEntries] ];
+		
+			/*create output line by pushing relevant columns*/
+			for (var j=0; j<collist.length; j++) {
+				var addStr = iline[ collist[j] ];
+				if(postproc != null) addStr = postproc( addStr );
+				oline.push( addStr ); 	
+			}
+			otable.push( oline );
+			oline = [];
+		}
+	}
+	return otable;
+};
+
+
+var genTableRowsFromDictIndeces = function (idxArr, dictWordsArr, widths) {
+	var dbg=false;
+	var rowStrs = [];	
+	var ostr = "";
+	for(var i=0; i<idxArr.length; i++) {
+		rowStrs = dictWordsArr[idxArr[i]];
+		if(dbg) console.log("adding row:"+JSON.stringify(rowStrs,null,1));
+		ostr += genTableRow( rowStrs, widths);//, ["4em","4em","6em"] );
+	}
+	return ostr;
+};
+
+
+var genTableRow = function (arr, widths) {
+	var ostr = '<tr>';
+	for( var i=0; i<arr.length; i++ ) {
+			ostr += '<td';
+			if( widths && widths.length > i) {
+				ostr += " style='width:"+widths[i]+"'";
+			}
+			ostr +='>'+arr[i]+'</td>';
+	}
+	ostr +='</tr>';
+	return ostr;
+};
+
+var genTableRowStartHeader = function (arr) {
+	var ostr = '<tr>';
+	ostr += '<th scope="row">'+arr[0]+'</th>';	
+	for( var i=1; i<arr.length; i++ ) {
+			ostr += '<td class="data">'+arr[i]+'</td>';
+	}
+	ostr +='</tr>';
+	return ostr;
+};
+
+var genTableHeader = function(  titlesarr ) {
+	var ostr = '<thead><tr>';
+	for (var i=0; i<titlesarr.length; i++) {
+		ostr += '<th scope="col">'+titlesarr[i]+'</th>';
+	}
+	ostr += '</tr></thead><tbody>';
+	return ostr;
+};
+
+var genHtmlTable = function (resTable, colTitels) {
+	var dbg = false;
+	var ostr = '<table id="restable"><thead><tr>';
+	for (var i=0; i<colTitels.length; i++) {
+		ostr += '<th scope="col" id="restableH'+i+'">'+colTitels[i]+'</th>';
+	}
+	ostr += '</tr></thead><tbody>';
+
+	for (var i=0; i<resTable.length; i++) {
+		ostr +='<tr>';
+		if(dbg) console.log("line["+i+"]: "+resTable[i]);
+
+		//genTableRowsFromDictIndeces( diffEntries, dict["words"] )
+		for (var j=0; j<resTable[i].length; j++) {
+			if(dbg) console.log("otable output restable["+i+"]["+j+"] = ["+resTable[i][j]+"]");
+			ostr += '<td>'+resTable[i][j]+'</td>';
+		}
+		ostr +='</tr>';
+	}
+	ostr +='</tbody></table>';
+
+	return ostr;
+};
+
+
+
+var genStatsHtmlTable = function (istr, scanResults,redScanResults,occurences) {
+	var dbg=true;
+	if(dbg) console.log("genStatsHtmlTable: istr:["+istr+"]");
+
+
+	var justUnicodeWordsList = getUnicodeWords(istr);
+	var trimmedTotalLength = 0;
+	for(var i=0; i<justUnicodeWordsList.length; i++) {
+		trimmedTotalLength += justUnicodeWordsList[i].length;
+	}	
+
+	if(dbg) console.log("genStatsHtmlTable: trimmedTotalLength:["+trimmedTotalLength+"]");
+
+	var wlists = getListsOfFoundWords( scanResults );
+	/* "foundW":		list of found words
+	 	"foundW_len":	total length of these words
+		"foundWU":		unique list of found words
+		"foundWU_len": length of that	*/
+
+	var ostr;
+	ostr = '<table id="inputStats" class="stats">';
+	ostr += genTableHeader( ["Characters","total","net (trimmed)"]);
+	ostr += genTableRowStartHeader( ["Input", istr.length, trimmedTotalLength]);
+	ostr +='</tbody></table><p></p>';
+
+	ostr += '<table id="wordStats" class="stats">';
+	ostr += genTableHeader( ["Found words","total","unique"]);
+	ostr += genTableRowStartHeader( 
+				["Found words count",scanResults.length,redScanResults.length ]
+			);
+	ostr += genTableRowStartHeader( 
+				["Found words length",wlists["foundW_len"],wlists["foundWU_len"] ]
+			);
+	ostr +='</tbody></table><p></p>';
+
+	ostr += '<table id="wordStats" class="stats">';
+	ostr += genTableHeader( ["Found words length","full input coverage","net input coverage"]);
+	ostr += genTableRowStartHeader([
+					"total length of words found",
+					Math.round(wlists["foundW_len"]*100/istr.length)+"%",
+					Math.round(wlists["foundW_len"]*100/trimmedTotalLength)+"%"]);
+	ostr +='</tbody></table><p></p>';
+
+	if( currentFreq ) {	ostr += genFreqTable( wlists ); }
+
+	return ostr;
+};

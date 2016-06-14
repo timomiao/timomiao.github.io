@@ -1,0 +1,50 @@
+body {
+	font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+	font-size: 62.5%;
+}
+
+#textarea {
+	width: 40em;
+	height: 8em;
+}
+
+table {
+	border: 1px solid #333;
+	color: #333333;
+/*	border-width: 1em;*/
+	border-color: #666666;
+	border-spacing: 0.2em;
+/*	border-collapse: collapse;*/
+}
+
+th[scope=col] {
+	border-bottom: 2px solid #333;
+	border-right: 2px solid #333;
+	color: #1C94C4;
+}
+
+tr {
+	border-bottom: 1px solid green;	
+}
+
+th#restableH0,th#restableH1 {
+	width: 5em;
+}
+th#restableH2 {
+	width: 9em;
+}
+
+table.stats {
+	width: 60em;
+}
+
+table.stats th{
+	padding-left: 2em;
+	padding-right: 2em;
+}
+
+td.data {
+	padding-right: 3em;
+	padding-left: 3em;
+	text-align: right;
+}

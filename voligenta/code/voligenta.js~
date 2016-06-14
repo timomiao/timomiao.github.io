@@ -1,0 +1,218 @@
+var dictionaries = {};
+var freqInterfaces = {};
+var istr = '';
+var scanResults = [];
+
+var sTree = {};
+var currDictKey = "cedict";
+var currentFreq = "hsk";
+
+//currDictKey = "testdic";
+var stats = {};
+
+$(document).ready(function() {
+	var dbg=false;
+
+	console.log("Page ready!");
+	for (var key in freqInterfaces) {freqInterfaces[key].init();}
+
+	$("#genvoclistbutton").click( function(event) {
+		istr = $("#textarea").val();
+		if(dbg) console.log("scan: "+istr);
+
+		var dict = dictionaries[currDictKey];
+		var colTitles = dict["colTitles"];
+		var colOfSearchWords = dict["colOfSearchWords"] || 0;
+		var cols = dict["words"][0].length;
+
+		var outputCols = [];
+		for (var i=0; i<cols; i++) {	outputCols.push(i);	}			
+
+		if(dbg) console.log("scan dict["+currDictKey+"][words] (len:"+cols+")");
+		if(dbg) console.log("outputCols:["+outputCols+"]");
+
+		/* 
+			scanResults contains arrays of indeces of dict wordlist 
+			that were found (chronologically) : [ [idx1] [idx2] [idx3a,idx3b], ... ] 
+			-> multiple indeces indicate multiple lines in dictionary with identical search word
+
+			(e.g. identical simplified chinese characters 
+				but different traditional characters when search for simplified word)
+		*/
+		scanResults = scanString(istr, dict["sTree"]);
+		if(true) console.log("Scan results:"+JSON.stringify(scanResults,null,2));
+
+		/* remove multiple occurences, save in separate array */
+		var [occurences,redScanResults] = reduceScanResults( scanResults );
+
+		if(dbg) console.log("reduced scan results:"+JSON.stringify(redScanResults,null,2));
+		if(dbg) console.log("occurences:"+JSON.stringify(occurences,null,2));
+
+		var postproc = null;
+		if( "postprocessor" in dict ) postproc = dict["postprocessor"];
+
+		var resTable = genResultsTable( redScanResults, dict["words"],outputCols, postproc );
+		if(dbg) console.log("results table:"+JSON.stringify(resTable,null,2));
+
+		var resHtmlTable = genHtmlTable(resTable, colTitles);
+		$("#outputtablecont").html(resHtmlTable);
+
+		var statsHtmlTable = genStatsHtmlTable(istr, scanResults,redScanResults,occurences);
+		$("#statstablecont").html(statsHtmlTable);
+
+		var unknownWords = getUnknownWords(istr, scanResults);
+		if(dbg) console.log("Unknown words:"+JSON.stringify(unknownWords,null,2));
+
+		var unknownHtmlTable = getUnknownHtml(istr, unknownWords);
+		$("#unknownsTable").html(unknownHtmlTable);
+
+		var sentences = getSentences(istr,dict["sentenceend"]);
+		console.log("sentences:["+JSON.stringify(sentences,null,1) +"]");
+
+	});
+
+var getSentences = function(istr,sentencedivider) {
+	var sentences = [];
+	var temp = istr.split(sentencedivider);
+	for (var i=0; i<temp.length; i++) {
+		tempWithoutSpaces = temp[i].replace(/\s/g,"");
+		console.log("temp["+i+"].length="+tempWithoutSpaces.length);
+		if(tempWithoutSpaces.length > 0) {
+			sentences.push( 
+				{"trimmedSentence":tempWithoutSpaces, "offset": istr.indexOf(temp[i]), "length": temp[i].length }
+			);
+		}
+	}
+	return sentences;
+};
+
+	$("#downloadSTree").click( function(event) {
+		download( currDictKey+"-sTree", 'dictionaries["'+currDictKey+'"]["sTree"] = '+ JSON.stringify(dictionaries[currDictKey]["sTree"],null,2)+";");
+	});
+	$("#downloadClickHtml").click( function(event) {
+		//$("#clickHtmlTest").html( createClickHtml(istr, scanResults, dictionaries[currDictKey]));
+		download( "clickHtml.html", createClickHtml(istr, scanResults, dictionaries[currDictKey]) );
+	});
+
+
+	$.each(dictionaries, function(key, value) {
+		console.log("Adding dictionaries["+key+"]");
+
+		var dictsize = dictionaries[key]["words"].length;
+		var fields = dictionaries[key]["words"][0].length;
+		console.log("addDictionaries: dictionaries["+key+"]: size:["+dictsize+"] field length:["+fields+"]");
+
+			for (var i=0; i<dictsize; i++) {
+				var templen = dictionaries[key]["words"][i].length;
+				if (  templen != fields ) {
+					console.log("Warning! "+key+"["+i+"] has length "+templen+" instead of "+fields+"!");
+				}
+			}
+		if( !( "sTree" in dictionaries[key] ) ) {
+			console.log("No sTree found for dictionary["+key+"]");
+
+			var colOfSearchWords = 0;
+
+			if( "colOfSearchWords" in dictionaries[key] ) {
+				colOfSearchWords = dictionaries[key]["colOfSearchWords"];				
+			}
+
+			console.log("Using column ["+colOfSearchWords+"] of dictionary["+key+"] for sTree");
+			dictionaries[key]["sTree"] = genSearchTree(dictionaries[key]["words"],colOfSearchWords);
+			console.log("Generating sTree completed");
+		}
+		else{
+			console.log("Dictionary["+key+"][sTree] found. Using that.");
+		}
+	}); //each dictionary: add/check
+});
+
+
+/* eliminates multiple scan results, saves in occ(urences) dict and returns that */
+var reduceScanResults = function (sres) {
+	var occ = {};
+	var newsres = [];
+
+	for (var i=0; i<sres.length; i++) {
+		var representing_word = sres[i]["leaf"][0];
+		if( representing_word in occ ) {
+			occ[ representing_word ]++;
+		}
+		else {
+			occ[ representing_word ] = 1;
+			newsres.push( sres[i]["leaf"] );
+		}
+	}
+	return [occ,newsres];
+};
+
+var getUnknownWords = function(istr, scanResults) {
+	var dbg=false;
+	var offset;
+	var idx;
+	var len;
+	var unknown = [];
+	var known = [];
+	var interval = [];
+	for(var i=0; i<scanResults.length; i++) {
+		offset = scanResults[i]["offset"];
+		len = scanResults[i]["len"];
+		interval = [offset, offset+len-1];
+		known.push( interval );
+	}
+	if(dbg) console.log("known areas:"+JSON.stringify(known,null,2));
+	unknown = removeSectionsFromStr(istr, known);
+	return unknown;
+};
+
+
+var getListsOfFoundWords = function( scanResults ){	
+	var dbg = false;
+	var dict = dictionaries[ currDictKey ];
+	var colOfSearchWords = dict["colOfSearchWords"] || 0;
+	var fWordsList = [];
+	var wordslength = 0;
+	var fWordsListU = [];
+	var wordslengthU = 0; //unique list
+	var tempdic = {};
+
+
+	for(var i=0; i<scanResults.length; i++)
+	{
+		var leaf = scanResults[i]["leaf"];
+		if(dbg) console.log("scanResults["+i+"]:["+scanResults[i]+"]");
+		if(dbg) console.log("adding leaf["+leaf+"]");
+		
+		//take any of the leaf components
+		//take any of the corresponding words
+		var arrayCorrespondingToLeaf = dict["words"][leaf[0]];
+		if( isArray(colOfSearchWords) ) {
+			word = arrayCorrespondingToLeaf[ colOfSearchWords[0] ];
+		}
+		else {
+			word = arrayCorrespondingToLeaf[ colOfSearchWords ];
+		}
+
+		if(dbg) console.log("adding length of "+word);
+		fWordsList.push( word );
+		wordslength += word.length;
+
+		//for unique list
+		if( !(word in tempdic) ) {
+			tempdic[ word ] = 1;
+			fWordsListU.push( word );
+			wordslengthU += word.length;
+		}
+	}
+	var output = { 
+		"foundW": fWordsList,
+		"foundW_len": wordslength, 
+		"foundWU" : fWordsListU, 
+		"foundWU_len": wordslengthU 
+	};
+
+	return output;
+};
+
+
+

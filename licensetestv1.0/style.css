@@ -1,0 +1,291 @@
+body {
+    font: 10px verdana, arial, helvetica, sans-serif;
+    background: #222255;
+}
+
+.hide { display: none; }
+.highlight { background-color: #FFFF66; }
+.correct { background-color: #77FF77; }
+.wrong { background-color: #FF7777;}
+.nohighlight { background-color: #FFFF99;}
+.highlightblue { background-color: #6666FF;}
+.nohighlightblue { background-color: #66E6FF; }
+.categories, #menutitle, .langs, #qbuttons, #picture, #breakbuttons, .startbuttons, #languages, #statspage, .sbutton{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.containerclass, #menutitle, .langs, .categories, .startbuttons, #question, #status, .ansclass, #picture, #breakmenu, #breakbuttons, .bbutton, #statspagetitle, #statspagelist, .sbutton {
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -mox-border-radius: 10px;
+}
+
+#menutitle, .langs, .categories, .startbuttons, #question, #status, .ansclass, #picture, .bbutton, #statspagetitle, #statspagelist, .sbutton {
+/*shadow*/   
+    -moz-box-shadow: 2px 2px 3px #007;
+    -webkit-box-shadow: 2px 2px 3px #007;
+    box-shadow: 2px 2px 3px #007;
+    /* For IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color='#000077')";
+    /* For IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color='#000077');
+}
+
+#breakbuttons {
+/*shadow*/   
+    -moz-box-shadow: 3px 3px 4px #007;
+    -webkit-box-shadow: 3px 3px 4px #007;
+    box-shadow: 3px 3px 4px #007;
+    /* For IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000077')";
+    /* For IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000077');
+
+    border: 3px solid black;
+}
+
+#menutitle, #question, #qbuttons, .anschar, .langs, .categories, .startbuttons, #statspagetitle {
+    position: relative;
+    float: left;
+}
+
+#languages, #status, #picture, .anstext, #statsclearstats {
+    position: relative;
+    float: right;
+}
+
+#statstable, .langs, .categories, .startbuttons, .bbutton, #breakbuttons, #breakmenu, #menucategory, #statspagelist, #statsgotobreakmenu{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#menutitle, .langs, .categories, .startbuttons, .bbutton {
+    text-align: center;
+}
+
+.containerclass, #menutitle, .langs, .categories, .startbuttons, .ansclass, #question, #status, .bbutton {
+    border: 2px solid black;
+}
+
+.langs, .categories, .startbuttons{
+    height: 100%;
+    text-align:center;
+}
+
+.containerclass, #breakmenu {
+    width: 800px;
+    height: 540px;
+    padding: 10px 10px 10px 10px;
+    margin: auto;
+}
+
+.containerclass, #breakbuttons {
+    background: #AAAAFF;
+}
+
+/* --- menu --- */
+
+#menutop { height: 20%; }
+
+#menutitle {
+    font-size: 60px;
+    background: white;
+    width: 80%;
+    height: 100%;
+}
+
+#languages {
+    height:50%;
+    width:17%;
+}
+
+#menucategory {
+    margin-top: 50px;
+    height: 30%;
+}
+
+#menustart {
+    margin-top: 50px;
+    height: 20%;
+}
+
+.langs {
+    margin: 0 10px 0 0;
+    width: 40%;
+    font-size:20px;
+}
+
+.categories {
+    width: 23%;    
+    font-size:40px;
+    margin-right: 12px;
+}
+
+.startbuttons {
+    width:47%;
+    font-size: 30px;
+    margin-right: 15px;
+}
+
+/* --- breakmenu --- */
+#breakmenu {
+    position: absolute;
+    top:50px;
+    z-index: 70;	
+}
+
+#breakbuttons {
+    font-size: 30px;
+    padding: 15px;
+    width: 40%;
+    height: 80%;
+    z-index: 75;
+}
+
+.bbutton {
+    margin-bottom: 10px;
+    height: 17.5%;
+    width: 96%;
+    z-index: 80;
+}
+
+/* --- questions --- */
+
+#upper, #lower { width: 100% }
+#upper { height: 30%; }
+#lower { 
+    height: 70%; 
+    margin: 10px 0 0 0;
+}
+
+#question, #status {
+    height: 100%;
+}
+
+#question {
+    padding: 0 10px 0 10px;
+    width: 77%;
+    background-color: white;
+}
+
+#status, #picture, .anstext {
+    height: 100%;
+}
+
+#status {
+    padding: 0 5px 0 5px;
+    width: 17%;
+    font-size: 22px;
+    background-color: #66E6FF;
+}
+
+.statusfield {
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+#number {
+    font-weight: bold;
+    margin-top: 0.7em;
+    margin-bottom: 1em;
+}
+#qbuttons {
+    width: 57%;
+    height: 100%;
+    z-index: 50;
+}
+
+#picture {
+    width: 40%;
+    height: 95.5%;
+    border: 4px solid black;
+    z-index:50;
+    background: white;
+}
+
+.ansclass {
+    z-index:55;
+    margin: 0 0 7px 0;
+    width: 100%;
+    height: 22.2%;
+}
+
+.anschar {
+    width:10%;
+    font-size: 50px;
+    margin: 0 0 0 9px; 
+    height: 100%;
+}
+
+.anstext {
+    width:87%;
+    text-align: left;
+}
+
+/* --- statspage ---*/
+
+#statsupper {
+    width: 100%;
+    height: 15%;
+}
+
+#statspagetitle, #statsclearstats {
+    height: 100%;
+    padding: 0 5px 0 5px;
+    text-align: center;
+}
+#statspagetitle {
+    font-size: 50px;
+    width: 80%;
+    background: white;
+}
+
+#statsclearstats {
+    font-size: 30px;
+    /*background-color: #66E6FF;*/ 
+    width: 17%;
+}
+
+#statslower {
+    width: 100%;
+    height:70%;
+    margin-top: 10px;
+}
+
+#statspagelist {
+    width: 100%;
+    height: 100%;
+    background-color: #66E6FF;
+    font-size:20px;
+}
+
+#statsgotobreakmenu {
+    width: 100%;
+    height: 14%;
+    margin-top: 10px;
+    font-size: 36px;
+}
+#statstable {
+    height: 90%;
+    width: 90%;
+    font-size: 30px;
+    padding-top: 25px;
+}
+
+#autosizecont {
+    top: 0;
+    left: 0;
+    position: absolute;
+    background: green;
+}
+
+#autosizespan {
+    background: yellow;
+}
+

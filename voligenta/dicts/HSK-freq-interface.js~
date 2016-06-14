@@ -1,0 +1,62 @@
+freqInterfaces["hsk"] = {
+	sHash: 	{},
+	dicts:	["hsk1","hsk2","hsk3","hsk4","hsk5","hsk6","none"],
+	wordCol:	0,
+	init:		function() {
+		console.log("init freqInterfaces[hsk]");
+		var runs = 0;
+
+		//populates sHash with words from all this.dicts with value=HSK-level: 
+		// sHash= { word:hsk-level, ...}
+		for(var i=0; i<this.dicts.length; i++) {
+			var dictKey = this.dicts[i];
+			if( !(dictKey in dictionaries ) ) {
+				console.error("freq[hsk]: dict["+dictKey+"] not yet ready");		
+				continue;
+			}
+			if( !this.isRestClass(i) ){
+				console.log("freq[hsk]: hashing dict["+dictKey+"]");
+				var words = dictionaries[ dictKey ]["words"];
+				for(var j=0; j< words.length; j++) {
+					var entry = words[j][this.wordCol];
+		
+					if( entry in this.sHash ){
+						console.log('freqInterfaces["hsk"]: entry ['+entry+'] already in HSK['+(this.sHash[entry]+1)+"]");
+					}
+					this.sHash[ entry ] = i+1;
+					runs++;
+				}
+			}
+		}
+		console.log("init freqInterfaces[hsk] completed: hashes = "+runs);
+	},
+	//returns HSK level (or 7 if not present)
+	getFreq: function(word) { //returns frequency 1 to 7
+		if( word in this.sHash ) return this.sHash[word];
+		console.log('freqInterfaces["hsk"]not in HSK:['+word+']');		
+		return 7;
+	},
+	getSizeOfFreqClass: function( freqno ) {
+		if( freqno == 7 ) return "none";
+		return dictionaries[ this.dicts[ freqno -1 ] ]["words"].length;
+	},
+	getNameOfFreqClass: function( freqno ) {
+		if( ! this.isValidFreqClass(freqno) ) return "invalid freqno "+freqno;
+		return this.dicts[ freqno -1 ];
+	},
+	getFreqClassRange: function(){
+		return [1,7];
+	},
+	isValidFreqClass: function( freqClass ){
+		var range = this.getFreqClassRange();
+		if ( (freqClass < range[0]) || (freqClass > range[1]) ){
+			return false;
+		}
+		return true;
+	},
+	isRestClass: function( freqClass ){
+		if (freqClass == 7) return true;
+		return false;
+	}
+};
+

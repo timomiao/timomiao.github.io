@@ -1,0 +1,114 @@
+<!DOCTYPE html public "-//W3C//DTD HTML 4.01//EN"> 
+<html>
+<head>
+	<title>Vocabulary Analyzer</title>
+	<meta http-equiv="Content-Type" content="text/html"; charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--	<link rel="icon" href="favicon.png"> -->
+<!--	<link rel="stylesheet" href="jQuery/jquery.mobile-1.4.5.min.css" /> -->
+
+	<script src="jQuery/jquery-1.11.3.min.js"></script>
+	<script src="jquery-ui-1.11.4/jquery-ui.js"></script> 
+
+	<script src="code/xregexp-3.0.0/xregexp-all.js"></script>
+	<link rel="stylesheet" href="jquery-ui-themes-1.11.4/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.css" />
+
+   <link rel="stylesheet" href="code/voligenta.css" /> 
+
+<!--	<script src="jQuery/jquery.mobile-1.4.5.min.js"></script> -->
+
+    <script type="text/javascript"> 
+        var dictionaries = {}; 
+        var freqInterfaces = {};
+    </script>
+    
+    <script src="code/various-tools.js"></script>
+    <script src="code/utils.js"></script>
+    
+	<script src="code/download.js"></script>
+	<script src="code/stree.js"></script>
+	<script src="code/freq.js"></script>
+	<script src="code/unknowns.js"></script>
+	<script src="code/genTable.js"></script>
+	<script src="code/createClickHtml.js"></script>
+	<script src="code/voligenta.js"></script>
+    <script src="code/voli-config.js"></script>
+    <script src="code/voli-scan.js"></script>
+    
+	<script src="dicts/testdic.js"></script>
+
+	<script src="dicts/cedict.js"></script>
+<script src="dicts/cedict-words.js"></script>
+<script src="dicts/cedict-sTree.js"></script>
+<script src="dicts/cedict-postproc.js"></script>
+<!--	<script src="dicts/cedict-test.js"></script> -->
+
+
+	<script src="dicts/HSK1-150.js"></script>
+	<script src="dicts/HSK2-150.js"></script>
+	<script src="dicts/HSK3-300.js"></script>
+	<script src="dicts/HSK4-600.js"></script>
+	<script src="dicts/HSK5-1300.js"></script>
+	<script src="dicts/HSK6-2500.js"></script>
+	<script src="dicts/HSK-freq-interface.js"></script>
+    
+  <script type="text/javascript">
+  $(function() {
+    $( "#tabs" ).tabs();
+  });
+
+  </script>
+</head>
+
+<body>
+	<form>
+  		<textarea name="textinput" id="textarea" placeholder="Paste Chinese text here and then press analyze button below"></textarea>
+	</form>
+
+	<button id="genvoclistbutton">Analyze!</button>
+
+
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Vocabulary list</a></li>
+        <li><a href="#tabs-2">Sentences with vocabulary</a></li>
+        <li><a href="#tabs-3">Unknown words</a></li>
+        <li><a href="#tabs-4">Statistics</a></li>
+        <li><a href="#tabs-5">Tools</a></li>
+    </ul>
+    <div id="tabs-1">
+        <div id="outputtablecont"></div>
+    </div>
+    <div id="tabs-2">
+        <div id="sentencesWithVocs"></div>
+    </div>
+    <div id="tabs-3">
+        <div id="unknownsTable"></div>
+    </div>
+    <div id="tabs-4">
+        <div id="statstablecont"></div>
+    </div>
+    <div id="tabs-5">
+        <p><button id="downloadClickHtml">Download clickable HTML file</button></p>
+        <div id="clickHtmlTest"></div>
+		<div id="clickHtmlTestPopup"></div>
+        <p><button id="downloadSTree">Download current sTree</button></p>
+    </div>
+</div>
+</body>
+
+
+<!--
+	<script src="code/tableexport/tableExport.js"></script>
+	<script src="code/tableexport/jquery.base64.js"></script>
+
+	<script src="code/tableexport/jspdf/libs/sprintf.js"></script>
+	<script src="code/tableexport/jspdf/jspdf.js"></script>
+	<script src="code/tableexport/jspdf/libs/base64.js"></script>
+-->
+
+	<!--	<a href="#" class="ui-btn" onClick ="$('#restable').tableExport({type:'json',escape:'false'});">Export table</a>
+<a href="#restable-popup" data-rel="popup" class="ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini" data-transition="pop">Colchoose</a>
+-->

@@ -1,0 +1,23 @@
+<!DOCTYPE html public "-//W3C//DTD HTML 4.01//EN"> 
+<html>
+<head>
+	<title>Clickable Html</title>
+	<meta http-equiv="Content-Type" content="text/html"; charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+	var tables = ["<table><tbody><tr><td>傳奇</td><td>传奇</td><td>chuan2 qi2</td><td>legendary/fantasy saga/romance/short stories of the Tang and Song Dynasty</td></tr></tbody></table>"];
+	var showDict = function(i) {
+		var ele = document.getElementById("clickHtmlTestPopup"); 
+		ele.innerHTML=tables[i];
+		return true;
+	};
+	 </script>
+</head>
+
+<body style="font-size:2em">
+
+
+<span onclick='showDict(0)'>传奇</span>
+
+<div id="clickHtmlTestPopup"></div>
+</body>

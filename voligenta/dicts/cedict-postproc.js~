@@ -1,0 +1,55 @@
+dictionaries["cedict"]["postprocessor"] = function(istr){		
+	var dbg = false;
+	if(dbg) console.log("Called cedict postprocessor for str=["+istr+"]");
+	var ostr = istr;
+	var pinyins = {
+"ba":1,"pa":1,"ma":1,"fa":1,"da":1,"ta":1,"na":1,"la":1,"ga":1,"ka":1,"ha":1,"zha":1,"cha":1,"sha":1,"za":1,"ca":1,"sa":1,"a":1,"bai":1,"pai":1,"mai":1,"dai":1,"tai":1,"nai":1,"lai":1,"gai":1,"kai":1,"hai":1,"zhai":1,"chai":1,"shai":1,"zai":1,"cai":1,"sai":1,"ai":1,"bao":1,"pao":1,"mao":1,"dao":1,"tao":1,"nao":1,"lao":1,"gao":1,"kao":1,"hao":1,"zhao":1,"chao":1,"shao":1,"rao":1,"zao":1,"cao":1,"sao":1,"ao":1,"ban":1,"pan":1,"man":1,"fan":1,"dan":1,"tan":1,"nan":1,"lan":1,"gan":1,"kan":1,"han":1,"zhan":1,"chan":1,"shan":1,"ran":1,"zan":1,"can":1,"san":1,"an":1,"bang":1,"pang":1,"mang":1,"fang":1,"dang":1,"tang":1,"nang":1,"lang":1,"gang":1,"kang":1,"hang":1,"zhang":1,"chang":1,"shang":1,"rang":1,"zang":1,"cang":1,"sang":1,"ang":1,"me":1,"de":1,"te":1,"ne":1,"le":1,"ge":1,"ke":1,"he":1,"zhe":1,"che":1,"she":1,"re":1,"ze":1,"ce":1,"se":1,"e":1,"bo":1,"po":1,"mo":1,"fo":1,"lo":1,"o":1,"bei":1,"pei":1,"mei":1,"fei":1,"dei":1,"nei":1,"lei":1,"gei":1,"kei":1,"hei":1,"zhei":1,"shei":1,"zei":1,"ei":1,"pou":1,"mou":1,"fou":1,"dou":1,"tou":1,"nou":1,"lou":1,"gou":1,"kou":1,"hou":1,"zhou":1,"chou":1,"shou":1,"rou":1,"zou":1,"cou":1,"sou":1,"ou":1,"ben":1,"pen":1,"men":1,"fen":1,"den":1,"nen":1,"gen":1,"ken":1,"hen":1,"zhen":1,"chen":1,"shen":1,"ren":1,"zen":1,"cen":1,"sen":1,"en":1,"beng":1,"peng":1,"meng":1,"feng":1,"deng":1,"teng":1,"neng":1,"leng":1,"geng":1,"keng":1,"heng":1,"zheng":1,"cheng":1,"sheng":1,"reng":1,"zeng":1,"ceng":1,"seng":1,"eng":1,"er":1,"bu":1,"pu":1,"mu":1,"fu":1,"du":1,"tu":1,"nu":1,"lu":1,"gu":1,"ku":1,"hu":1,"zhu":1,"chu":1,"shu":1,"ru":1,"zu":1,"cu":1,"su":1,"wu":1,"gua":1,"kua":1,"hua":1,"zhua":1,"chua":1,"shua":1,"wa":1,"guai":1,"kuai":1,"huai":1,"zhuai":1,"chuai":1,"shuai":1,"wai":1,"duan":1,"tuan":1,"nuan":1,"luan":1,"guan":1,"kuan":1,"huan":1,"zhuan":1,"chuan":1,"shuan":1,"ruan":1,"zuan":1,"cuan":1,"suan":1,"wan":1,"guang":1,"kuang":1,"huang":1,"zhuang":1,"chuang":1,"shuang":1,"wang":1,"duo":1,"tuo":1,"nuo":1,"luo":1,"guo":1,"kuo":1,"huo":1,"zhuo":1,"chuo":1,"shuo":1,"ruo":1,"zuo":1,"cuo":1,"suo":1,"wo":1,"dui":1,"tui":1,"gui":1,"kui":1,"hui":1,"zhui":1,"chui":1,"shui":1,"rui":1,"zui":1,"cui":1,"sui":1,"wei":1,"dun":1,"tun":1,"nun":1,"lun":1,"gun":1,"kun":1,"hun":1,"zhun":1,"chun":1,"shun":1,"run":1,"zun":1,"cun":1,"sun":1,"wen":1,"dong":1,"tong":1,"nong":1,"long":1,"gong":1,"kong":1,"hong":1,"zhong":1,"chong":1,"rong":1,"zong":1,"cong":1,"song":1,"weng":1,"bi":1,"pi":1,"mi":1,"di":1,"ti":1,"ni":1,"li":1,"ji":1,"qi":1,"xi":1,"yi":1,"lia":1,"jia":1,"qia":1,"xia":1,"ya":1,"yai":1,"biao":1,"piao":1,"miao":1,"fiao":1,"diao":1,"tiao":1,"niao":1,"liao":1,"jiao":1,"qiao":1,"xiao":1,"yao":1,"bian":1,"pian":1,"mian":1,"dian":1,"tian":1,"nian":1,"lian":1,"jian":1,"qian":1,"xian":1,"yan":1,"niang":1,"liang":1,"jiang":1,"qiang":1,"xiang":1,"yang":1,"bie":1,"pie":1,"mie":1,"die":1,"tie":1,"nie":1,"lie":1,"jie":1,"qie":1,"xie":1,"ye":1,"yo":1,"miu":1,"diu":1,"niu":1,"liu":1,"jiu":1,"qiu":1,"xiu":1,"you":1,"bin":1,"pin":1,"min":1,"nin":1,"lin":1,"jin":1,"qin":1,"xin":1,"yin":1,"bing":1,"ping":1,"ming":1,"ding":1,"ting":1,"ning":1,"ling":1,"jing":1,"qing":1,"xing":1,"ying":1,"jiong":1,"qiong":1,"xiong":1,"yong":1,"nü":1,"lü":1,"ju":1,"qu":1,"xu":1,"yu":1,"juan":1,"quan":1,"xuan":1,"yuan":1,"nüe":1,"lüe":1,"jue":1,"que":1,"xue":1,"yue":1,"jun":1,"qun":1,"xun":1,"yun":1,"zhi":1,"chi":1,"shi":1,"ri":1,"zi":1,"ci":1
+	};
+
+	var tones = {"a":'āáǎà',"e":'ēéěè',"i":'īíǐì',"o":'ōóǒò',"u":'ūúǔù',"ü":'ǖǘǚǜ',"v":'ǖǘǚǜ'};
+
+//	var pinyins={"ba":1,"pa":1,"ma":1,"fa":1,"da":1,"ta":1,"na":1,"la":1,"ga":1,"ka":1,"ha":1,"zha":1,"cha":1,"sha":1,"za":1,"ca":1,"sa":1,"a":1,"bai":1,"pai":1,"mai":1,"dai":1,"tai":1,"nai":1,"lai":1,"gai":1,"kai":1,"hai":1,"zhai":1,"chai":1,"shai":1,"zai":1,"cai":1,"sai":1,"ai":1,"bao":1,"pao":1,"mao":1,"dao":1,"tao":1,"nao":1,"lao":1,"gao":1,"kao":1,"hao":1,"zhao":1,"chao":1,"shao":1,"rao":1,"zao":1,"cao":1,"sao":1,"ao":1,"ban":1,"pan":1,"man":1,"fan":1,"dan":1,"tan":1,"nan":1,"lan":1,"gan":1,"kan":1,"han":1,"zhan":1,"chan":1,"shan":1,"ran":1,"zan":1,"can":1,"san":1,"an":1,"bang":1,"pang":1,"mang":1,"fang":1,"dang":1,"tang":1,"nang":1,"lang":1,"gang":1,"kang":1,"hang":1,"zhang":1,"chang":1,"shang":1,"rang":1,"zang":1,"cang":1,"sang":1,"ang":1,"me":1,"de":1,"te":1,"ne":1,"le":1,"ge":1,"ke":1,"he":1,"zhe":1,"che":1,"she":1,"re":1,"ze":1,"ce":1,"se":1,"e":1,"bo":1,"po":1,"mo":1,"fo":1,"lo":1,"o":1,"bei":1,"pei":1,"mei":1,"fei":1,"dei":1,"nei":1,"lei":1,"gei":1,"kei":1,"hei":1,"zhei":1,"shei":1,"zei":1,"ei":1,"pou":1,"mou":1,"fou":1,"dou":1,"tou":1,"nou":1,"lou":1,"gou":1,"kou":1,"hou":1,"zhou":1,"chou":1,"shou":1,"rou":1,"zou":1,"cou":1,"sou":1,"ou":1,"ben":1,"pen":1,"men":1,"fen":1,"den":1,"nen":1,"gen":1,"ken":1,"hen":1,"zhen":1,"chen":1,"shen":1,"ren":1,"zen":1,"cen":1,"sen":1,"en":1,"beng":1,"peng":1,"meng":1,"feng":1,"deng":1,"teng":1,"neng":1,"leng":1,"geng":1,"keng":1,"heng":1,"zheng":1,"cheng":1,"sheng":1,"reng":1,"zeng":1,"ceng":1,"seng":1,"eng":1,"er":1,"bu":1,"pu":1,"mu":1,"fu":1,"du":1,"tu":1,"nu":1,"lu":1,"gu":1,"ku":1,"hu":1,"zhu":1,"chu":1,"shu":1,"ru":1,"zu":1,"cu":1,"su":1,"wu":1,"gua":1,"kua":1,"hua":1,"zhua":1,"chua":1,"shua":1,"wa":1,"guai":1,"kuai":1,"huai":1,"zhuai":1,"chuai":1,"shuai":1,"wai":1,"duan":1,"tuan":1,"nuan":1,"luan":1,"guan":1,"kuan":1,"huan":1,"zhuan":1,"chuan":1,"shuan":1,"ruan":1,"zuan":1,"cuan":1,"suan":1,"wan":1,"guang":1,"kuang":1,"huang":1,"zhuang":1,"chuang":1,"shuang":1,"wang":1,"duo":1,"tuo":1,"nuo":1,"luo":1,"guo":1,"kuo":1,"huo":1,"zhuo":1,"chuo":1,"shuo":1,"ruo":1,"zuo":1,"cuo":1,"suo":1,"wo":1,"dui":1,"tui":1,"gui":1,"kui":1,"hui":1,"zhui":1,"chui":1,"shui":1,"rui":1,"zui":1,"cui":1,"sui":1,"wei":1,"dun":1,"tun":1,"nun":1,"lun":1,"gun":1,"kun":1,"hun":1,"zhun":1,"chun":1,"shun":1,"run":1,"zun":1,"cun":1,"sun":1,"wen":1,"dong":1,"tong":1,"nong":1,"long":1,"gong":1,"kong":1,"hong":1,"zhong":1,"chong":1,"rong":1,"zong":1,"cong":1,"song":1,"weng":1,"bi":1,"pi":1,"mi":1,"di":1,"ti":1,"ni":1,"li":1,"ji":1,"qi":1,"xi":1,"yi":1,"lia":1,"jia":1,"qia":1,"xia":1,"ya":1,"yai":1,"biao":1,"piao":1,"miao":1,"fiao":1,"diao":1,"tiao":1,"niao":1,"liao":1,"jiao":1,"qiao":1,"xiao":1,"yao":1,"bian":1,"pian":1,"mian":1,"dian":1,"tian":1,"nian":1,"lian":1,"jian":1,"qian":1,"xian":1,"yan":1,"niang":1,"liang":1,"jiang":1,"qiang":1,"xiang":1,"yang":1,"bie":1,"pie":1,"mie":1,"die":1,"tie":1,"nie":1,"lie":1,"jie":1,"qie":1,"xie":1,"ye":1,"yo":1,"miu":1,"diu":1,"niu":1,"liu":1,"jiu":1,"qiu":1,"xiu":1,"you":1,"bin":1,"pin":1,"min":1,"nin":1,"lin":1,"jin":1,"qin":1,"xin":1,"yin":1,"bing":1,"ping":1,"ming":1,"ding":1,"ting":1,"ning":1,"ling":1,"jing":1,"qing":1,"xing":1,"ying":1,"jiong":1,"qiong":1,"xiong":1,"yong":1,"nü":1,"lü",1,"ju":1,"qu":1,"xu":1,"yu":1,"juan":1,"quan":1,"xuan":1,"yuan":1,"nüe":1,"lüe":1,"jue":1,"que":1,"xue":1,"yue":1,"jun":1,"qun":1,"xun":1,"yun":1,"zhi":1,"chi":1,"shi":1,"ri":1,"zi":1,"ci":1};
+
+	var candidates = istr.match(/[a-züA-Z]*[1,2,3,4,5]/g,"i");
+	if (candidates == null) {
+		//console.log("No candidates found: candidates =["+candidates+"]");
+		return istr;
+	}
+	if(dbg) console.log("candidates: ["+candidates+"]");
+	var candDict = {};
+	for (var i=0; i<candidates.length; i++) {
+		candDict[ candidates[i] ] ="1";
+	}
+
+	for (var key in candDict) {
+		var processword = candDict[key];
+		if(dbg) console.log("processing key["+key+"]");
+
+		var word = key.slice(0,-1);
+		if(dbg) console.log("processing word ["+word+"]");
+
+		if (word.toLowerCase() in pinyins) {
+			
+			if(dbg) console.log("Pinyin found:["+word+"]");
+			var tone = key[ key.length -1 ];
+			if (tone == 5) continue;
+
+			var vocals = word.toLowerCase().match(/[aeiouü]/g,"i");
+			if(dbg) console.log("word: ["+word+"]  tone:["+tone+"]  numbOfVocals:["+vocals.length+"]");
+			if(dbg) console.log("vocals:["+vocals+"]");
+			
+			var vocal = vocals[0];
+			if( (vocals.length>1) && !(vocal in ["a","e","o"]) ) { vocal = vocals[1]; }
+			var vocalOffset = word.toLowerCase().indexOf(vocal);
+			if(dbg) console.log("changing vocal ["+vocal+"] at index["+vocalOffset+"]");
+
+			word = word.substr(0,vocalOffset) + tones[vocal][tone-1] + word.substr(vocalOffset+1);
+			if(dbg) console.log("new word:["+ostr+"]");
+
+			ostr = ostr.split( key ).join( word );
+		}
+	}
+	return ostr;
+};
+
+

@@ -1,0 +1,122 @@
+
+/* remove non overlapping sections from string
+	sections: list of intervals: [ [left1,right1], [left2,right2], ...]
+
+	returns left (unknown) intervals
+*/
+var removeSectionsFromStr = function(istr, sections) {
+	var dbg=true;
+	if(dbg) console.log("Sections:"+JSON.stringify(sections,null,1));
+	if(dbg) console.log("istr.length="+istr.length);
+
+	if (sections.length == 0) return [];
+	var left,right;
+	var unknown = [];
+	var interval = [];
+
+	
+	var offsetOfFirstWordFound = sections[0][0];
+	if(offsetOfFirstWordFound > 0) { 
+		var left = 0;
+		var right = offsetOfFirstWordFound;
+		var unknown = getIntervalsOfUnknownWords(istr, left,right);
+	}
+	
+	for(var i=0; i<sections.length; i++) {
+	//	if(dbg) console.log("Section["+i+"]:"+sections[i]);
+		left=	sections[i][1]+1;
+		if( (i+1)<sections.length ){
+			right = sections[i+1][0]-1;
+		}
+		else { right = (istr.length-1); }
+	//	if(dbg) console.log("left="+left+"  right="+right);
+		if( right > left ){
+			interval = [left,right];
+
+			var unknownIntervals = getIntervalsOfUnknownWords(istr, left,right);
+			unknown = unknown.concat( unknownIntervals );
+		}
+	}
+	if(dbg) console.log("unknown sections:"+JSON.stringify(unknown,null,1));
+	
+	return unknown;
+};
+
+/* istr:	 input string (text)
+	start: offset of segment with stuff not matched by sTree
+	end:	 end index (exclusive)
+*/
+var getIntervalsOfUnknownWords = function(istr, start, end) {
+	var dbg=false;
+	var intervalStr = istr.substring(start, end+1);
+	if(dbg) console.log("getIntervalOfUnknownWords: (.., start,end):("+start+","+end+"):["+intervalStr+"]");
+
+	var unknown = [];
+	var unknownUnicodeWords = getUnicodeWords( intervalStr );
+	for(var j=0; j<unknownUnicodeWords.length; j++) {
+		//stuff left and right index as interval into array of intervals of unknown words
+		if(dbg) console.log("getIntervalOfUnknownWords: looking up offset of ["+unknownUnicodeWords[j]+"] startidx="+start);		
+		var offset = istr.indexOf( unknownUnicodeWords[j], start );
+		var len = unknownUnicodeWords[j].length;
+		interval = [ offset, offset + len-1];
+		if(dbg) console.log("getIntervalOfUnknownWords: pushing interval["+interval+"]");
+		unknown.push(interval);
+	}
+	return unknown;
+}
+
+var getUnicodeWords = function (istr) {
+	var dbg = false;
+	var wordList = [];
+	var splitArray = XRegExp.split(istr, XRegExp("[^\\pL]+") );
+	//somehow this always contains "" as first (and last if semgent.length>0) element
+	for (var idx=0; idx< splitArray.length; idx++) {
+		if(splitArray[idx].length>0) {
+			wordList.push( splitArray[idx]);
+			if(dbg) console.log("getUnicodeWords: pushing word["+splitArray[idx]+"]");
+		}
+	//	else {if(dbg) console.log("omitting non-word segment ["+splitArray[idx]+"]");	}
+	}
+	return wordList;
+}
+
+var notwordcomp = new RegExp(/[\!\?\\r\n\t\,\.\:\ \;\'\"\，\。\。\“\”\：\《\》\？\！\；]*/,"g");
+
+var containsWord = function (istr) {
+	var newstr = istr.replace(notwordcomp, '');
+	console.log("containsWord("+istr+")-> newstr=["+newstr+"].length="+newstr.length);
+
+	var unicodeWord = XRegExp("^\\pL+$");
+	if (unicodeWord.test(istr)) {console.log("XRegExp says yes");}
+	else {console.log("XRegExp says nay");}
+
+	if( newstr.length == 0) return false;
+	return true;
+}
+
+
+
+var getUnknownHtml = function (istr, unknownWords) {
+	var dbg=false;
+	var ostr = '<table id="unknownsTable">';
+	ostr += genTableHeader(["unknown word","meaning"]);
+	ostr += '<tbody>';
+	var arr;
+
+	if(dbg) console.log("getUnkownHtml: istr=["+istr+"]");
+	for( var i=0; i<unknownWords.length; i++) {
+		arr = unknownWords[i];
+		if(dbg) console.log("creating entry for ["+arr+"]: left:"+arr[0]+" right:"+arr[1]);
+		var unknownWord = istr.substring(arr[0],arr[1]+1);
+		unknownWord =unknownWord.replace("<",'&lt');
+		unknownWord =unknownWord.replace(">",'&gt');
+		ostr += '<tr>';
+		ostr += '<td>'+unknownWord+'</td>';
+		ostr += '<td>unknown</td>';
+		ostr +='</tr>';
+	}
+	ostr +='</tbody></table>';
+	if(dbg) console.log("unknown-table:"+ostr);
+	return ostr;
+};
+

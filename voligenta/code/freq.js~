@@ -1,0 +1,76 @@
+/* 
+	input:
+	wordarray: 			list of words
+	freqInterfaceID:	reference to function that returns frequency(-class) (e.g. HSK level)
+
+	returns { "freqClass": number of words, ... } 
+*/
+var getFreqStats = function (wordarray, freqInterfaceID ) {
+	var dbg=false;
+	var rest = [];
+	if(dbg) console.log("getFreqStats: in: wordarray:["+wordarray+"]");
+	var freqCount = {};
+	for (var i=0; i<wordarray.length; i++) {
+		if(dbg) console.log("get freq of word ["+wordarray[i]+"]");
+		var freq = freqInterfaces[ freqInterfaceID ].getFreq( wordarray[i] );		
+
+		if( freqInterfaces[ freqInterfaceID ].isRestClass( freq ) ) rest.push(wordarray[i]);
+
+		if( !( freq in freqCount ) ) freqCount[freq]=0;
+		freqCount[freq]++;
+	}
+	console.log("getFreqStats: rest elements:"+JSON.stringify(rest,null,1));
+	return freqCount;
+};
+
+var genFreqTable = function (wlists) {
+	var dbg=false;
+	var freqI = freqInterfaces[currentFreq];
+	var freqs = getFreqStats( wlists["foundW"], currentFreq );
+	var freqsU = getFreqStats( wlists["foundWU"], currentFreq );
+
+	var colTitles=["Class","Size","Found(unique)","Class Coverage","Found(total)","Matched text coverage"];
+
+	var ostr = '<table id="freqTable" class="stats">';
+	ostr += genTableHeader(colTitles);
+
+
+	if(dbg) console.log("freqsUL"+JSON.stringify(freqsU));
+
+	var totalSum = 0;
+	var coverSum = 0;
+
+	var fRange = freqI.getFreqClassRange();
+	for( var fClass = fRange[0]; fClass <= fRange[1]; fClass++) {
+		var rowStrs = [];
+		rowStrs.push( freqI.getNameOfFreqClass( fClass) );
+		rowStrs.push( freqI.getSizeOfFreqClass( fClass ) );
+	
+		if(freqsU[fClass]){
+			rowStrs.push( freqsU[fClass] );
+
+			var coverage="-";
+			var cSize = freqI.getSizeOfFreqClass(fClass);
+			if(!isNaN(cSize)) coverage = Math.round(freqsU[fClass]*100/cSize)+"%";
+			rowStrs.push( coverage );
+
+			rowStrs.push( freqs[fClass] );
+			totalSum += freqs[fClass];
+
+			var textCoverRatio = Math.round(freqs[fClass]*100/wlists["foundW"].length);
+			coverSum += textCoverRatio;
+			rowStrs.push( textCoverRatio +"%");
+		}
+		else { //not in freqsU
+			rowStrs = rowStrs.concat(["0","0%","0","0%"]);
+		}
+		
+		ostr += genTableRowStartHeader( rowStrs );
+		rowStrs = [];
+	}
+	ostr += genTableRowStartHeader(["Sum:","","","",totalSum,coverSum+"%"]);
+
+	ostr +='</tbody></table>';
+
+	return ostr;
+};

@@ -1,0 +1,127 @@
+
+/* array = Array of array of strings: [["..","..",..,".."],["..",.. ],.. ]
+	idx = index of each array that contains words to extract _or_ array of indeces
+
+	returns sTree e.g.  { "h": {"e": {"l": {"l": {"o": {"lf": [leafval1, leafval2,...]}}}}}}
+*/
+var genSearchTree = function (array, idx) {
+	console.log("genSearchTree for array elements in column(s) ["+idx+"]");
+	var sTree = {};
+	for (var i=0; i<array.length; i++) {
+//		console.log("i:"+i+" of "+array.length+" word:"+array[i][idx]);
+		
+		if ( isArray(idx) ){
+			for(var j=0; j<idx.length; j++) {
+				addWordToSearchTree( sTree, array[i][ idx[j] ], i );		
+			}
+		}
+		else {
+			addWordToSearchTree( sTree, array[i][idx], i );	
+		}
+	}
+//	console.log("final tree:"+JSON.stringify(sTree,null,2));
+
+	console.log("Generated tree has "+countleafs(sTree)+" leafs");
+	console.log("Dict size: "+array.length+" words");
+	return sTree;
+};
+
+/* tree: tree structure: { "h": {"e": {"l": {"l": {"o": {"lf": [leafval1, leafval2,...]}}}}}}
+	word:	string to add
+	leaf: content of leaf of added word
+*/
+var addWordToSearchTree = function (tree,word,leaf) {
+	var dbg = false;
+//	if(word == "吃") dbg = true;
+//	if(dbg) console.log("adding word["+word+"] (array idx:"+leaf+")");
+
+	var tpointer = tree;
+	for(var i=0; i<word.length; i++) {
+		if(dbg) console.log("Adding letter["+word[i]+"] of word "+word);
+		if ( typeof tpointer[word[i]] == 'undefined' ) { tpointer[word[i]] ={}; }
+		tpointer = tpointer[word[i]];
+	}
+	if( ! ("lf" in tpointer) ) { 
+		tpointer["lf"] =[]; 
+	}
+
+	if	($.inArray( leaf, tpointer["lf"] ) == -1 ) tpointer["lf"].push(leaf);
+};
+
+var countleafs = function ( node ) {
+	var leafs = 0;
+	/* node is a leaf = array of dictionary lines of identical words */
+	if( isArray( node ) ) {
+		return node.length;
+	}
+	for( var key in node ){	leafs += countleafs(node[key]);}
+	return leafs;
+}
+
+/*
+	istr: input string
+	tree:	search tree
+
+	scans for longest non-overlapping strings 
+
+	by marking longest found substring from left and start 
+	new scan right after that
+*/
+
+var scanString = function (istr, tree) {
+	var dbg = true;
+	var results = [];
+	var found_leaf = false;
+
+	var tpointer = tree;
+
+	var i = 0;
+	var lefti = 0;
+	var runs = 0;
+	var level =0;
+	if( istr.length == 0 ) return results;
+
+	do {
+		if(dbg) console.log("checking char["+i+"]=["+istr[i]+"] (lefti="+lefti+")");
+		if (istr[i] in tpointer) { //follow tree and mark biggest found subwords from left with leaf (= line of wordlist )
+			if(dbg) console.log(istr[i]+" found in sTree (lefti="+lefti+")");
+			tpointer = tpointer[ istr[i] ];
+			level++;
+			if( "lf" in tpointer ) { 
+				found_leaf = tpointer["lf"]; /*found leaf is array*/
+				lefti = i;
+				if(dbg) console.log("left sub word(s) found -> line:["+tpointer["lf"]+"]: set lefti="+lefti);
+			}
+		}
+		else { //now it's not (anymore) in tree
+			if(dbg) console.log("["+istr[i]+"] not found in subtree level["+level+"]");
+			if ( isArray(found_leaf) ) {
+				if(dbg) console.log("leaf exists (line["+found_leaf+"]) <- pushing");
+
+				results.push( {"leaf": found_leaf, "offset": lefti-level+1, "len": level} );
+				found_leaf = false;
+				i = lefti;
+				if(dbg) console.log("new index before i++: "+i);
+			}
+			else {
+				lefti++;				
+				i=lefti;
+				if(dbg) console.log("setting i to lefti+1 = "+i);
+			}
+			tpointer = tree;
+			level = 0;
+		}//not in subtree's root
+		runs++;
+	} while ( (i++ < istr.length) );// && (runs++ < 500));
+
+	if(dbg) console.log("scan runs:"+runs);
+
+	return results;
+};
+
+var isArray = function (obj) {
+	if( Object.prototype.toString.call( obj ) === '[object Array]' ) {
+   	return true;
+	}
+	return false;
+}
